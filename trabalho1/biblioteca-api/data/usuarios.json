@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "nome": "Admin",
+    "email": "admin@biblioteca.com",
+    "senha": "$2b$10$abcdef...",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "nome": "Admin",
+    "email": "admin@biblioteca.com",
+    "senha": "$2b$10$YiCmUravN0n55P/IISO6kOfYzJWzaW8M9A3f4phbkOsIo/Dc3a7By",
+    "role": "admin"
+  },
+  {
+    "id": 3,
+    "nome": "Admin",
+    "email": "admin@biblioteca.com",
+    "senha": "$2b$10$pT6R7e2.NubaXS5VeUPcv.51izPBZQ3kJZks76Hn92EZHUBsW.YZy",
+    "role": "admin"
+  },
+  {
+    "id": 4,
+    "nome": "Admin",
+    "email": "admin@biblioteca.com",
+    "senha": "$2b$10$CEBw9pHsKVIcskbJ52ghVu37pNZaHuRKIIpiuDd58ZHKvcsFkRcBG",
+    "role": "admin"
+  }
+]
