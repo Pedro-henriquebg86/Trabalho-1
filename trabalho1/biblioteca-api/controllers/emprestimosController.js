@@ -7,12 +7,7 @@ exports.listar = (req, res) => {
   res.json(emprestimos);
 };
 
-/**
- * Regras:
- * - Usuário autenticado pode criar empréstimo para si (req.usuario.id)
- * - Admin pode criar empréstimo para qualquer usuário se passar usuarioId no body
- * - Não permite novo empréstimo se já existir um empréstimo com status "ativo" para o mesmo livro
- */
+
 exports.criar = (req, res) => {
   const emprestimos = lerEmprestimos();
   const livros = lerLivros();
@@ -28,9 +23,7 @@ exports.criar = (req, res) => {
   const jaEmprestado = emprestimos.find(e => e.livroId == livroId && e.status === "ativo");
   if (jaEmprestado) return res.status(400).json({ msg: "Livro já emprestado" });
 
-  // Decide o usuário do empréstimo:
-  // - se admin e passou usuarioId no body -> usa esse id
-  // - caso contrário usa o id do token (usuário autenticado)
+ 
   let usuarioId = req.usuario.id;
   if (req.usuario.role === "admin" && usuarioIdBody) usuarioId = usuarioIdBody;
 
@@ -52,9 +45,7 @@ exports.criar = (req, res) => {
   res.json({ msg: "Empréstimo criado com sucesso", emprestimo: novo });
 };
 
-/**
- * Atualização só por admin (marcar devolvido, alterar datas, status)
- */
+
 exports.atualizar = (req, res) => {
   const emprestimos = lerEmprestimos();
   const { id } = req.params;
@@ -72,9 +63,7 @@ exports.atualizar = (req, res) => {
   res.json({ msg: "Empréstimo atualizado com sucesso", emprestimo });
 };
 
-/**
- * Delete só por admin
- */
+
 exports.deletar = (req, res) => {
   if (req.usuario.role !== "admin") return res.status(403).json({ msg: "Acesso negado" });
 
@@ -85,3 +74,4 @@ exports.deletar = (req, res) => {
   salvarEmprestimos(emprestimos);
   res.json({ msg: "Empréstimo removido com sucesso" });
 };
+
