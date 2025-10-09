@@ -1,16 +1,16 @@
-const fs = require("fs");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const usuarios = require("../data/usuarios.json");
-
-function salvarUsuarios(dados) {
-  fs.writeFileSync("./data/usuarios.json", JSON.stringify(dados, null, 2));
-}
+const { lerUsuarios, salvarUsuarios } = require("../models/usuariosModel");
 
 exports.registrar = async (req, res) => {
   const { nome, email, senha, role } = req.body;
-  if (!nome || !email || !senha) {
-    return res.status(400).json({ msg: "Preencha todos os campos" });
+  if (!nome || !email || !senha) return res.status(400).json({ msg: "Preencha todos os campos" });
+
+  const usuarios = lerUsuarios();
+
+  // Verifica se o email já existe
+  if (usuarios.some(u => u.email === email)) {
+    return res.status(400).json({ msg: "Email já cadastrado" });
   }
 
   const hashedSenha = await bcrypt.hash(senha, 10);
@@ -30,6 +30,7 @@ exports.registrar = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, senha } = req.body;
+  const usuarios = lerUsuarios();
   const usuario = usuarios.find(u => u.email === email);
   if (!usuario) return res.status(400).json({ msg: "Usuário não encontrado" });
 

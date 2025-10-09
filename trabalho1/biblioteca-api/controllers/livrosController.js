@@ -1,19 +1,14 @@
-const fs = require("fs");
-let livros = require("../data/livros.json");
-
-function salvarLivros(dados) {
-  fs.writeFileSync("./data/livros.json", JSON.stringify(dados, null, 2));
-}
+const { lerLivros, salvarLivros } = require("../models/livrosModel");
 
 exports.listar = (req, res) => {
+  const livros = lerLivros();
   res.json(livros);
 };
 
 exports.criar = (req, res) => {
+  const livros = lerLivros();
   const { titulo, autor, ano } = req.body;
-  if (!titulo || !autor || !ano) {
-    return res.status(400).json({ msg: "Preencha todos os campos" });
-  }
+  if (!titulo || !autor || !ano) return res.status(400).json({ msg: "Preencha todos os campos" });
 
   const novoLivro = { id: livros.length + 1, titulo, autor, ano };
   livros.push(novoLivro);
@@ -23,6 +18,7 @@ exports.criar = (req, res) => {
 };
 
 exports.atualizar = (req, res) => {
+  const livros = lerLivros();
   const { id } = req.params;
   const { titulo, autor, ano } = req.body;
 
@@ -38,7 +34,9 @@ exports.atualizar = (req, res) => {
 };
 
 exports.deletar = (req, res) => {
+  let livros = lerLivros();
   const { id } = req.params;
+
   livros = livros.filter(l => l.id != id);
   salvarLivros(livros);
   res.json({ msg: "Livro removido com sucesso" });
