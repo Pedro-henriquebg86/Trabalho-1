@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { listar, criar, atualizar, deletar } = require("../controllers/livrosController");
+const { listar, criar, atualizar, deletar } = require("../controllers/emprestimosController");
 const autenticarToken = require("../middleware/authMiddleware");
 const autorizarRole = require("../middleware/roleMiddleware");
 
-// Qualquer usuário logado pode listar livros
+// qualquer usuário autenticado pode ver e criar (criar: usa req.usuario.id)
+// só admin pode atualizar/deletar
 router.get("/", autenticarToken, listar);
-
-// Apenas admins podem criar, atualizar ou deletar
-router.post("/", autenticarToken, autorizarRole("admin"), criar);
+router.post("/", autenticarToken, criar);
 router.put("/:id", autenticarToken, autorizarRole("admin"), atualizar);
 router.delete("/:id", autenticarToken, autorizarRole("admin"), deletar);
 
