@@ -1,69 +1,57 @@
-# Trabalho 1
-
 # 📚 **API de Biblioteca – Sistema Completo em Node.js e Express**
 
 ---
 
 ## 🧭 **1. Introdução**
 
-A **API de Biblioteca** é um sistema backend desenvolvido em **Node.js** e **Express.js** com o objetivo de **gerenciar o funcionamento de uma biblioteca digital**, abrangendo o cadastro e controle de **usuários, livros, autores, editoras e empréstimos**.
+A **API de Biblioteca** é um sistema backend desenvolvido com **Node.js** e **Express.js**, criado para simular o funcionamento de uma biblioteca digital.
+O sistema permite o gerenciamento completo de **usuários, livros, autores, editoras e empréstimos**, implementando **operações CRUD**, **autenticação segura (JWT)** e **controle de acesso baseado em papéis** (usuário comum e administrador).
 
-O sistema foi projetado com base em **boas práticas de desenvolvimento de software** e segue o padrão arquitetural **MVC (Model-View-Controller)**, promovendo uma estrutura organizada, modular e escalável.
-
-Entre os principais objetivos do projeto, destacam-se:
-
-* Demonstrar o uso de **APIs RESTful** com rotas bem definidas e documentação clara;
-* Aplicar **autenticação segura** e **autorização baseada em papéis (roles)** utilizando **JWT**;
-* Implementar **operações CRUD completas** (Create, Read, Update, Delete) em múltiplas entidades;
-* Simular um banco de dados real por meio de **arquivos JSON persistentes**;
-* Consolidar conceitos de **backend moderno**, como middleware, modularização e controle de acesso.
-
-Essa API reflete um sistema completo de **gerenciamento de biblioteca**, sendo adequada tanto para uso acadêmico quanto como base para sistemas reais que utilizem bancos de dados como **MongoDB, MySQL ou PostgreSQL**.
+Este projeto foi desenvolvido seguindo rigorosamente o padrão **MVC (Model–View–Controller)**, priorizando **organização, segurança e escalabilidade**.
+Ele serve como base acadêmica e também como estrutura sólida para aplicações reais com banco de dados.
 
 ---
 
 ## ⚙️ **2. Tecnologias Utilizadas**
 
-| Tecnologia             | Função Principal                                             |
-| ---------------------- | ------------------------------------------------------------ |
-| **Node.js**            | Ambiente de execução JavaScript no servidor.                 |
-| **Express.js**         | Framework leve para manipulação de rotas e middlewares.      |
-| **bcrypt**             | Criptografia de senhas para garantir segurança dos usuários. |
-| **jsonwebtoken (JWT)** | Criação e validação de tokens de autenticação.               |
-| **File System (fs)**   | Manipulação de arquivos JSON que simulam o banco de dados.   |
-| **Thunder Client**     | Testes de requisições HTTP (alternativa ao Postman).         |
+| Tecnologia             | Descrição                                                |
+| ---------------------- | -------------------------------------------------------- |
+| **Node.js**            | Ambiente de execução JavaScript no servidor.             |
+| **Express.js**         | Framework para gerenciamento de rotas e middlewares.     |
+| **bcrypt**             | Criptografia segura de senhas.                           |
+| **jsonwebtoken (JWT)** | Autenticação e controle de acesso via tokens.            |
+| **File System (fs)**   | Manipulação de arquivos JSON usados como banco de dados. |
+| **Thunder Client**     | Extensão do VS Code usada para testar requisições HTTP.  |
 
 ---
 
-## 🧱 **3. Estrutura do Projeto – Padrão MVC**
+## 🧱 **3. Estrutura do Projeto (Arquitetura MVC)**
 
-O projeto está dividido em três grandes camadas (Model, Controller e Routes), além das pastas auxiliares de dados e segurança.
-
-```bash
+```
 biblioteca-api/
 │
-├── controllers/               # Regras de negócio e validação das requisições
+├── controllers/               # Lógica de negócio e manipulação das requisições
 │   ├── autoresController.js
 │   ├── livrosController.js
 │   ├── usuariosController.js
 │   ├── editorasController.js
 │   └── emprestimosController.js
 │
-├── models/                    # Manipulação e persistência dos dados (JSON)
+├── models/                    # Manipulação de dados (leitura e escrita JSON)
 │   ├── autoresModel.js
 │   ├── livrosModel.js
 │   ├── usuariosModel.js
 │   ├── editorasModel.js
 │   └── emprestimosModel.js
 │
-├── routes/                    # Definição dos endpoints da API
+├── routes/                    # Definição dos endpoints (rotas da API)
 │   ├── autores.js
 │   ├── livros.js
 │   ├── usuarios.js
 │   ├── editoras.js
 │   └── emprestimos.js
 │
-├── middleware/                # Middlewares de autenticação e autorização
+├── middleware/                # Segurança e controle de acesso
 │   ├── authMiddleware.js
 │   └── roleMiddleware.js
 │
@@ -74,15 +62,13 @@ biblioteca-api/
 │   ├── editoras.json
 │   └── emprestimos.json
 │
-├── server.js                  # Ponto de entrada da aplicação
-└── package.json               # Dependências e scripts do projeto
+├── server.js                  # Arquivo principal da aplicação
+└── package.json               # Dependências e scripts
 ```
 
 ---
 
-## 🧩 **4. Modelo de Relacionamento entre Entidades**
-
-A seguir, um diagrama textual representando a relação entre as entidades do sistema:
+## 🧩 **4. Relacionamento entre Entidades**
 
 ```
 ┌────────────┐       ┌──────────────┐        ┌────────────┐
@@ -109,88 +95,113 @@ A seguir, um diagrama textual representando a relação entre as entidades do si
                                             └────────────┘
 ```
 
-**Resumo das relações:**
+---
 
-* Um **usuário** pode ter vários **empréstimos**.
-* Um **livro** pode estar relacionado a **um autor** e **uma editora**.
-* Um **empréstimo** liga **um usuário** a **um livro** específico.
+## 🔒 **5. Segurança e Autenticação**
+
+A autenticação é feita via **JWT (JSON Web Token)** e senhas criptografadas com **bcrypt**.
+
+### 5.1 Processo de Autenticação
+
+1. O usuário realiza login enviando **email e senha**.
+2. O servidor valida as credenciais e gera um **token JWT** válido por 1 hora.
+3. Esse token deve ser enviado em todas as requisições protegidas, no cabeçalho:
+
+```
+Authorization: Bearer <seu_token>
+```
+
+### 5.2 Controle de Acesso
+
+* **Usuário comum:** pode listar informações (GET).
+* **Administrador:** pode criar, atualizar e excluir registros.
 
 ---
 
-## 🔐 **5. Autenticação e Segurança**
+## 💻 **6. Como Executar o Projeto (Passo a Passo)**
 
-A segurança foi implementada por meio de dois middlewares principais:
+### 🧩 Passo 1 – Instalar as Dependências
 
-### 5.1 `authMiddleware.js`
+Abra o terminal na pasta do projeto e execute:
 
-Valida o **token JWT** presente no cabeçalho da requisição.
-
-```js
-const token = req.headers["authorization"];
-if (!token) return res.status(401).json({ msg: "Token não fornecido" });
+```bash
+npm install express bcrypt jsonwebtoken
 ```
 
-Se válido, o usuário é associado à requisição:
+### 🧩 Passo 2 – Iniciar o Servidor
 
-```js
-req.usuario = usuario;
+```bash
+node server.js
 ```
+
+Se tudo estiver correto, aparecerá:
+
+```
+Servidor rodando na porta 3000
+```
+
+Agora a API está ativa em:
+
+```
+http://localhost:3000
+```
+
+> Dica: você pode usar `npx nodemon server.js` para reiniciar automaticamente quando salvar arquivos.
 
 ---
 
-### 5.2 `roleMiddleware.js`
+## 🧪 **7. Testando no Thunder Client (Passo a Passo)**
 
-Restringe acesso conforme o papel do usuário:
+### 🔹 1. Registrar um Administrador
 
-* **admin:** acesso completo (CRUD total).
-* **usuario:** apenas leitura e ações pessoais.
+**Método:** `POST`
+**URL:** `http://localhost:3000/usuarios/registrar`
 
-```js
-function autorizarRole(role) {
-  return (req, res, next) => {
-    if (req.usuario.role !== role) {
-      return res.status(403).json({ msg: "Acesso negado" });
-    }
-    next();
-  };
-}
-```
-
----
-
-## 🧾 **6. Entidades e Funcionalidades**
-
-### 6.1 Usuários
-
-Gerencia cadastro, login e controle de papéis.
-
-| Método | Endpoint              | Descrição                             | Acesso  |
-| ------ | --------------------- | ------------------------------------- | ------- |
-| POST   | `/usuarios/registrar` | Registrar novo usuário                | Público |
-| POST   | `/usuarios/login`     | Login e geração de token              | Público |
-| GET    | `/usuarios`           | Listar todos os usuários (sem senhas) | Admin   |
-
-#### Exemplo – Registro de Administrador
+**Body (JSON):**
 
 ```json
 {
-  "nome": "Carlos Silva",
-  "email": "carlos@biblioteca.com",
+  "nome": "Admin",
+  "email": "admin@biblioteca.com",
   "senha": "123456",
   "role": "admin"
 }
 ```
 
-#### Exemplo – Login
+---
+
+### 🔹 2. Registrar um Usuário Comum
+
+**Método:** `POST`
+**URL:** `http://localhost:3000/usuarios/registrar`
+
+**Body (JSON):**
 
 ```json
 {
-  "email": "carlos@biblioteca.com",
+  "nome": "Maria Silva",
+  "email": "maria@biblioteca.com",
   "senha": "123456"
 }
 ```
 
-#### Resposta:
+---
+
+### 🔹 3. Fazer Login (e obter token)
+
+**Método:** `POST`
+**URL:** `http://localhost:3000/usuarios/login`
+
+**Body (JSON):**
+
+```json
+{
+  "email": "admin@biblioteca.com",
+  "senha": "123456"
+}
+```
+
+**Resposta esperada:**
 
 ```json
 {
@@ -199,20 +210,36 @@ Gerencia cadastro, login e controle de papéis.
 }
 ```
 
+Copie o valor do token (sem aspas).
+
 ---
 
-### 6.2 Livros
+### 🔹 4. Listar Usuários (Somente Admin)
 
-Cadastro e controle de livros disponíveis.
+**Método:** `GET`
+**URL:** `http://localhost:3000/usuarios`
 
-| Método | Endpoint      | Descrição             | Acesso      |
-| ------ | ------------- | --------------------- | ----------- |
-| GET    | `/livros`     | Lista todos os livros | Autenticado |
-| POST   | `/livros`     | Cria um novo livro    | Admin       |
-| PUT    | `/livros/:id` | Atualiza um livro     | Admin       |
-| DELETE | `/livros/:id` | Remove um livro       | Admin       |
+**Headers:**
 
-#### Exemplo – Criação
+```
+Authorization: Bearer <token_do_admin>
+```
+
+---
+
+### 🔹 5. Criar um Livro (Apenas Admin)
+
+**Método:** `POST`
+**URL:** `http://localhost:3000/livros`
+
+**Headers:**
+
+```
+Authorization: Bearer <token_do_admin>
+Content-Type: application/json
+```
+
+**Body (JSON):**
 
 ```json
 {
@@ -224,82 +251,18 @@ Cadastro e controle de livros disponíveis.
 
 ---
 
-### 6.3 Autores
+### 🔹 6. Listar Livros (Qualquer Usuário Autenticado)
 
-Gerencia informações sobre autores.
+**Método:** `GET`
+**URL:** `http://localhost:3000/livros`
 
-| Método | Endpoint       | Descrição       | Acesso      |
-| ------ | -------------- | --------------- | ----------- |
-| GET    | `/autores`     | Lista autores   | Autenticado |
-| POST   | `/autores`     | Cria novo autor | Admin       |
-| PUT    | `/autores/:id` | Atualiza autor  | Admin       |
-| DELETE | `/autores/:id` | Remove autor    | Admin       |
+**Headers:**
 
-#### Exemplo – Criação
-
-```json
-{
-  "nome": "Machado de Assis",
-  "nacionalidade": "Brasileiro",
-  "dataNascimento": "1839-06-21"
-}
+```
+Authorization: Bearer <token_de_qualquer_usuario>
 ```
 
----
-
-### 6.4 Editoras
-
-Gerencia informações de editoras literárias.
-
-| Método | Endpoint        | Descrição         | Acesso      |
-| ------ | --------------- | ----------------- | ----------- |
-| GET    | `/editoras`     | Lista editoras    | Autenticado |
-| POST   | `/editoras`     | Cria nova editora | Admin       |
-| PUT    | `/editoras/:id` | Atualiza editora  | Admin       |
-| DELETE | `/editoras/:id` | Remove editora    | Admin       |
-
-#### Exemplo – Criação
-
-```json
-{
-  "nome": "Companhia das Letras",
-  "pais": "Brasil",
-  "anoFundacao": 1986
-}
-```
-
----
-
-### 6.5 Empréstimos
-
-Controla o empréstimo e devolução de livros.
-
-| Método | Endpoint           | Descrição            | Acesso      |
-| ------ | ------------------ | -------------------- | ----------- |
-| GET    | `/emprestimos`     | Lista empréstimos    | Autenticado |
-| POST   | `/emprestimos`     | Cria novo empréstimo | Usuário     |
-| PUT    | `/emprestimos/:id` | Atualiza devolução   | Admin       |
-| DELETE | `/emprestimos/:id` | Exclui registro      | Admin       |
-
-#### Exemplo – Criação
-
-```json
-{
-  "livroId": 1,
-  "usuarioId": 2,
-  "dataEmprestimo": "2025-10-10",
-  "dataDevolucao": null
-}
-```
-
----
-
-## 💾 **7. Persistência de Dados**
-
-A persistência ocorre em arquivos JSON armazenados na pasta `/data`.
-Cada entidade possui seu arquivo próprio, com operações de leitura e escrita gerenciadas via **File System (fs)**.
-
-**Exemplo – `livros.json`:**
+**Resposta esperada:**
 
 ```json
 [
@@ -314,42 +277,105 @@ Cada entidade possui seu arquivo próprio, com operações de leitura e escrita 
 
 ---
 
-## 🧪 **8. Testes no Thunder Client**
+### 🔹 7. Criar Autor, Editora e Empréstimo (Admin)
 
-### Fluxo recomendado de testes:
+**Autor**
 
-1. **Registrar usuário admin**
-2. **Registrar usuário comum**
-3. **Fazer login (pegar token)**
-4. **Testar listagem de livros/autores/editoras**
-5. **Criar registros (com token admin)**
-6. **Simular empréstimo (com token usuário)**
+```http
+POST http://localhost:3000/autores
+```
 
-**Importante:**
-Em todas as rotas protegidas, inclua no cabeçalho:
+```json
+{
+  "nome": "Machado de Assis",
+  "nacionalidade": "Brasileiro",
+  "dataNascimento": "1839-06-21"
+}
+```
+
+**Editora**
+
+```http
+POST http://localhost:3000/editoras
+```
+
+```json
+{
+  "nome": "Companhia das Letras",
+  "pais": "Brasil",
+  "anoFundacao": 1986
+}
+```
+
+**Empréstimo (Usuário comum)**
+
+```http
+POST http://localhost:3000/emprestimos
+```
+
+```json
+{
+  "livroId": 1,
+  "usuarioId": 2,
+  "dataEmprestimo": "2025-10-10",
+  "dataDevolucao": null
+}
+```
+
+---
+
+## 🔄 **8. Fluxo de Requisições (Diagrama HTTP)**
 
 ```
-Authorization: Bearer <seu_token>
+[ Cliente (Thunder Client) ]
+        │
+        │  POST /usuarios/login
+        ▼
+[ Servidor Express ] ──► [ usuariosController.js ]
+        │
+        │  Gera Token JWT
+        ▼
+[ Cliente envia Token ]
+        │
+        │  GET /livros
+        ▼
+[ authMiddleware.js ] ──► Valida Token
+        │
+        │  RoleMiddleware.js (verifica admin)
+        ▼
+[ Controller específico ]
+        │
+        ▼
+[ Model → arquivo JSON ]
+        │
+        ▼
+[ Resposta JSON ao cliente ]
 ```
 
 ---
 
 ## 🧠 **9. Boas Práticas Aplicadas**
 
-* **Separação de responsabilidades:** controllers, models e routes independentes.
-* **Segurança:** uso de bcrypt e tokens JWT com expiração.
-* **Escalabilidade:** estrutura facilmente adaptável para bancos SQL/NoSQL.
-* **Código limpo:** modularização, mensagens consistentes e validação de campos obrigatórios.
-* **Documentação clara:** endpoints, exemplos e diagramas para fácil entendimento.
+✔ Separação completa de responsabilidades (MVC).
+✔ Senhas criptografadas e tokens temporários.
+✔ Controle de acesso baseado em papéis (role-based access control).
+✔ Estrutura pronta para integração com bancos SQL ou NoSQL.
+✔ Tratamento de erros e mensagens padronizadas.
+✔ Documentação clara e completa.
 
 ---
 
 ## 🏁 **10. Conclusão**
 
-A **API de Biblioteca** é um projeto completo, seguro e modular, aplicando conceitos essenciais do desenvolvimento backend moderno.
-Ela demonstra o uso profissional de **Node.js**, **Express.js**, **JWT** e **arquitetura MVC**, com separação total entre lógica, dados e autenticação.
+A **API de Biblioteca** é um sistema completo e profissional, implementando os conceitos fundamentais do desenvolvimento backend moderno:
 
-O sistema cumpre integralmente os requisitos de um projeto acadêmico e técnico, sendo uma base sólida para aplicações reais.
+* **Autenticação JWT**,
+* **Controle de acesso seguro**,
+* **CRUD completo**,
+* **Persistência de dados local**,
+* e **arquitetura escalável (MVC)**.
+
+O projeto cumpre integralmente os requisitos acadêmicos, demonstrando domínio técnico e aplicabilidade prática.
 
 ---
 
