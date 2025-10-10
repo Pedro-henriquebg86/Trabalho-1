@@ -1,14 +1,26 @@
 const fs = require("fs");
-const path = "./data/usuarios.json";
+const path = require("path");
 
+const arquivoUsuarios = path.join(__dirname, "../data/usuarios.json");
+
+// Função para ler os usuários
 function lerUsuarios() {
-  if (!fs.existsSync(path)) return [];
-  const dados = fs.readFileSync(path);
-  return JSON.parse(dados);
+  try {
+    const dados = fs.readFileSync(arquivoUsuarios, "utf8");
+    return JSON.parse(dados || "[]");
+  } catch (error) {
+    console.error("Erro ao ler usuários:", error);
+    return [];
+  }
 }
 
-function salvarUsuarios(usuarios) {
-  fs.writeFileSync(path, JSON.stringify(usuarios, null, 2));
+// Função para salvar usuários
+function salvarUsuarios(dados) {
+  try {
+    fs.writeFileSync(arquivoUsuarios, JSON.stringify(dados, null, 2));
+  } catch (error) {
+    console.error("Erro ao salvar usuários:", error);
+  }
 }
 
 module.exports = { lerUsuarios, salvarUsuarios };
